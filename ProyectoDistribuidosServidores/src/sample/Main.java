@@ -22,8 +22,9 @@ public class Main {
         System.out.println("Este servidor sera de tipo activo (1) o pasivo (2)?\n");
         int tipo = input.nextInt();
 
-        Controller c = new Controller(1);
+        Controller c = new Controller(2);
         if(primario.equals("s")){
+            System.out.println("Ingrese la direccion del archivo a copiar: ");
             String archivo = input.next();
             c.createCopy(archivo);
         }

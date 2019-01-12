@@ -55,5 +55,13 @@ public class Servidor {
         return "C:\\Users\\Public\\FSServidores\\Servidor"+_id+"\\";
     }
 
-
+    @Override
+    public String toString() {
+        return "Servidor{" +
+                "_id=" + _id +
+                ", _principal=" + _principal +
+                ", _tipo=" + _tipo +
+                ", _listaVersiones=" + _listaVersiones +
+                '}';
+    }
 }

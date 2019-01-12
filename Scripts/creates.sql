@@ -2,13 +2,16 @@ create table public.Servidor
 (
     ser_id serial primary key,
     ser_tipo integer,
+	ser_disponible boolean,
     ser_principal boolean
 	);
+
 	
 	create Table public.Archivo(
 	arc_id serial primary key,
-	arc_nombre varchar(30) unique
+	arc_nombre varchar(100) unique
 	);
+
 	
 	create Table public.Version(
 	ver_id serial primary key,

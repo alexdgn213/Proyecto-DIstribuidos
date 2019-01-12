@@ -10,8 +10,16 @@ public abstract class DAO {
     private ResultSet _rs;
     private static String BD_USER = "CoreMensajeria";
     private static String BD_PASSWORD = "coremensajeria";
-    private static String BD_URL = "jdbc:postgresql://localhost:5432/CoreMensajeria";
+    private static String BD_URL = "jdbc:postgresql://localhost:5432/ProyectoDistribuidos";
     private static String BD_CLASS_FOR_NAME = "org.postgresql.Driver";
+    private Connection _conn = bdConnect();
+
+
+    public static Connection getConInstance(){
+
+        conInstance = bdConnect();
+        return conInstance;
+    }
 
     /**
      * Metodo que realiza la conexion con la base de datos
@@ -22,18 +30,13 @@ public abstract class DAO {
      * @see Connection
      * @see Statement
      */
-    public static Connection getBdConnect()
+    public static Connection bdConnect()
     {
 
         try
         {
 
-            Class.forName(BD_CLASS_FOR_NAME);
             return DriverManager.getConnection(BD_URL,BD_USER, BD_PASSWORD);
-        }
-        catch (ClassNotFoundException e)
-        {
-            e.printStackTrace();
         }
         catch (SQLException e)
         {
@@ -42,15 +45,73 @@ public abstract class DAO {
         return null;
     }
 
-    protected static void closeConnection()
-    {
-        try
-        {
+    /**
+     * Metodo que se conecta a la base de datos sin cerrar la conexion
+     * @param query Consulta a la base de datos
+     * @return Tabla que representa la consulta del query
+     * @throws SQLException
+     */
+    public ResultSet sqlConn ( String query ) throws SQLException {
+
+        try {
+            _st = _conn.createStatement();
+            _rs  = _st.executeQuery( query );
+        }
+        catch ( NullPointerException e ){
+            e.printStackTrace();
+            System.err.println("NullPointerExceptionSql: " + e.getMessage());
+        }
+        catch ( Exception e ){
+            System.err.println("ExceptionSql: " + e.getMessage() + " , Query: " + query);
+            e.printStackTrace();
+        }
+        finally {
+            return _rs;
+        }
+
+    }
+
+
+    /**
+     * Metodo que realiza un query a la base de datos con devolucion
+     * Realizar preferiblemente antes de bdConnect
+     * @param query
+     * @return Tabla que representa la consulta del query
+     * @throws SQLException Error en SQL
+     * @throws Exception
+     * @see ResultSet
+     */
+    public ResultSet sql (String query) throws SQLException , NullPointerException {
+
+        try {
+            _st = _conn.createStatement();
+            _rs  = _st.executeQuery( query );
+
+        }
+        catch ( NullPointerException e ){
+            e.printStackTrace();
+            System.err.println("NullPointerExceptionSql: " + e.getMessage() + " , Query: " + query);
+            return null;
+        }
+
+        finally {
+            _conn.close();
+            return _rs;
+        }
+    }
+
+    /**
+     * metodo estatico para cerrar
+     * la conexion a la base de datos
+     * @param conn
+     */
+
+    public static void bdClose(Connection conn) {
+        try{
             conn.close();
         }
-        catch ( SQLException e )
-        {
-//            logger.error( "Metodo: {} {}", "getBdConnect", e.toString() );
+        catch (SQLException e){
+            e.printStackTrace();
         }
     }
 }
