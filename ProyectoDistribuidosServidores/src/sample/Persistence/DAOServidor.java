@@ -50,25 +50,37 @@ public class DAOServidor extends DAO {
         return servidors;
     }
 
-    public Servidor getById(Servidor servidor) throws SQLException {
+    public Servidor getById(int id) throws SQLException {
 
         String query = "select * from public.Servidor where ser_id = ? ";
         Connection c = DAO.bdConnect();
         PreparedStatement ps = c.prepareStatement(query);
-        ps.setInt(1,servidor.get_id());
+        ps.setInt(1,id);
         ResultSet rs = ps.executeQuery();
+        Servidor servidor = null;
         while(rs.next()){
-            int id = rs.getInt("ser_id");
             int tipo = rs.getInt("ser_tipo");
             Boolean principal = rs.getBoolean("ser_principal");
             DAOVersion daoVersion = new DAOVersion();
-            servidor = new Servidor(id,principal,tipo,daoVersion.findByServidor(servidor));
+            servidor = new Servidor(id,principal,tipo,null);
+            servidor.set_listaVersiones(daoVersion.findByServidor(servidor));
         }
         c.close();
         return servidor;
     }
 
-    
+    public void setDisponible(boolean disponible, int id) throws SQLException {
+
+        String query = "UPDATE Servidor set ser_disponible = ? where ser_id = ? ";
+        Connection c = DAO.bdConnect();
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setBoolean(1,disponible);
+        ps.setInt(2,id);
+        ps.executeUpdate();
+        c.close();
+    }
+
+
 
     public Archivo findByName(String name) throws SQLException {
         String query = "select * from public.Archivo where arc_nombre = ? ";

@@ -57,11 +57,13 @@ public class Servidor {
 
     @Override
     public String toString() {
-        return "Servidor{" +
-                "_id=" + _id +
-                ", _principal=" + _principal +
-                ", _tipo=" + _tipo +
-                ", _listaVersiones=" + _listaVersiones +
-                '}';
+        String ret = "Servidor :"  + _id +
+                "\n    Principal:" + _principal +
+                "\n    Tipo:" + _tipo +
+                "\n    ListaVersiones:";
+        for(Version v : _listaVersiones)
+        ret = ret + "\n        " + v;
+        ret = ret+ "\n\n";
+        return ret;
     }
 }

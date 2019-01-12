@@ -1,6 +1,5 @@
 package sample.Persistence;
 
-import javafx.scene.shape.Arc;
 import sample.DAO;
 import sample.Domain.Archivo;
 import sample.Domain.Servidor;
@@ -43,7 +42,7 @@ public class DAOVersion extends DAO {
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
             int id = rs.getInt("ver_archivo");
-            Date fecha = rs.getDate("ver_fecha");
+            Timestamp fecha = rs.getTimestamp("ver_fecha");
             version = new Version(archivo,fecha);
         }
         c.close();
@@ -61,7 +60,7 @@ public class DAOVersion extends DAO {
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
             int id = rs.getInt("ver_id");
-            Date fecha = rs.getDate("ver_fecha");
+            Timestamp fecha = rs.getTimestamp("ver_fecha");
             versionArrayList.add(new Version(id,archivo,fecha));
 
         }
@@ -73,14 +72,14 @@ public class DAOVersion extends DAO {
     //TRAE TODAS LAS VERSIONES
     public ArrayList<Version> findByServidor(Servidor servidor) throws SQLException {
         String query = "select * from Version,Ser_Ver where ver_id = ser_ver_version and ser_ver_servidor = ? order by ver_archivo desc ";
-        ArrayList<Version> versionArrayList = null;
+        ArrayList<Version> versionArrayList = new ArrayList<Version>();
         Connection c = DAO.bdConnect();
         PreparedStatement ps = c.prepareStatement(query);
         ps.setInt(1,servidor.get_id());
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
             int id = rs.getInt("ver_id");
-            Date fecha = rs.getDate("ver_fecha");
+            Timestamp fecha = rs.getTimestamp("ver_fecha");
             int idArchivo = rs.getInt("ver_archivo");
             DAOArchivo daoArchivo = new DAOArchivo();
             Archivo archivo = daoArchivo.findById(idArchivo);
@@ -98,6 +97,7 @@ public class DAOVersion extends DAO {
         PreparedStatement ps = c.prepareStatement(query);
         ps.setInt(1,archivo.get_id());
         ps.execute();
+        c.close();
     }
 
 
