@@ -28,7 +28,6 @@ public class DAOVersion extends DAO {
             preparedStatement.setInt(2,s.get_id());
             preparedStatement.executeUpdate();
         }
-        c.close();
         return v;
     }
 
@@ -45,7 +44,6 @@ public class DAOVersion extends DAO {
             Timestamp fecha = rs.getTimestamp("ver_fecha");
             version = new Version(archivo,fecha);
         }
-        c.close();
         return version;
 
     }
@@ -64,7 +62,6 @@ public class DAOVersion extends DAO {
             versionArrayList.add(new Version(id,archivo,fecha));
 
         }
-        c.close();
         return versionArrayList;
 
     }
@@ -86,7 +83,6 @@ public class DAOVersion extends DAO {
             versionArrayList.add(new Version(id,archivo,fecha));
 
         }
-        c.close();
         return versionArrayList;
 
     }
@@ -97,7 +93,6 @@ public class DAOVersion extends DAO {
         PreparedStatement ps = c.prepareStatement(query);
         ps.setInt(1,archivo.get_id());
         ps.execute();
-        c.close();
     }
 
 

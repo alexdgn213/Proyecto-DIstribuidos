@@ -15,11 +15,6 @@ public abstract class DAO {
     private Connection _conn = bdConnect();
 
 
-    public static Connection getConInstance(){
-
-        conInstance = bdConnect();
-        return conInstance;
-    }
 
     /**
      * Metodo que realiza la conexion con la base de datos
@@ -32,86 +27,7 @@ public abstract class DAO {
      */
     public static Connection bdConnect()
     {
-
-        try
-        {
-
-            return DriverManager.getConnection(BD_URL,BD_USER, BD_PASSWORD);
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
+        return SQL.getInstance().getConnection();
     }
 
-    /**
-     * Metodo que se conecta a la base de datos sin cerrar la conexion
-     * @param query Consulta a la base de datos
-     * @return Tabla que representa la consulta del query
-     * @throws SQLException
-     */
-    public ResultSet sqlConn ( String query ) throws SQLException {
-
-        try {
-            _st = _conn.createStatement();
-            _rs  = _st.executeQuery( query );
-        }
-        catch ( NullPointerException e ){
-            e.printStackTrace();
-            System.err.println("NullPointerExceptionSql: " + e.getMessage());
-        }
-        catch ( Exception e ){
-            System.err.println("ExceptionSql: " + e.getMessage() + " , Query: " + query);
-            e.printStackTrace();
-        }
-        finally {
-            return _rs;
-        }
-
-    }
-
-
-    /**
-     * Metodo que realiza un query a la base de datos con devolucion
-     * Realizar preferiblemente antes de bdConnect
-     * @param query
-     * @return Tabla que representa la consulta del query
-     * @throws SQLException Error en SQL
-     * @throws Exception
-     * @see ResultSet
-     */
-    public ResultSet sql (String query) throws SQLException , NullPointerException {
-
-        try {
-            _st = _conn.createStatement();
-            _rs  = _st.executeQuery( query );
-
-        }
-        catch ( NullPointerException e ){
-            e.printStackTrace();
-            System.err.println("NullPointerExceptionSql: " + e.getMessage() + " , Query: " + query);
-            return null;
-        }
-
-        finally {
-            _conn.close();
-            return _rs;
-        }
-    }
-
-    /**
-     * metodo estatico para cerrar
-     * la conexion a la base de datos
-     * @param conn
-     */
-
-    public static void bdClose(Connection conn) {
-        try{
-            conn.close();
-        }
-        catch (SQLException e){
-            e.printStackTrace();
-        }
-    }
 }

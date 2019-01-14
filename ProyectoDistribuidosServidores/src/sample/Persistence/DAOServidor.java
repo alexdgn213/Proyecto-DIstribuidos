@@ -19,7 +19,6 @@ public class DAOServidor extends DAO {
         ResultSet rs = ps.getGeneratedKeys();
         if(rs.next())
             archivo.set_id(rs.getInt(1));
-        c.close();
     }
 
     public void deleteArchivo(Archivo archivo) throws SQLException{
@@ -28,7 +27,6 @@ public class DAOServidor extends DAO {
         PreparedStatement ps = c.prepareStatement(query);
         ps.setInt(1,archivo.get_id());
         ps.execute();
-        c.close();
     }
 
     public ArrayList<Servidor> getAllDisponibles() throws SQLException {
@@ -46,7 +44,6 @@ public class DAOServidor extends DAO {
             servidor = new Servidor(id,principal,tipo,null);
             servidors.add(servidor);
         }
-        c.close();
         return servidors;
     }
 
@@ -65,7 +62,6 @@ public class DAOServidor extends DAO {
             servidor = new Servidor(id,principal,tipo,null);
             servidor.set_listaVersiones(daoVersion.findByServidor(servidor));
         }
-        c.close();
         return servidor;
     }
 
@@ -77,7 +73,6 @@ public class DAOServidor extends DAO {
         ps.setBoolean(1,disponible);
         ps.setInt(2,id);
         ps.executeUpdate();
-        c.close();
     }
 
 

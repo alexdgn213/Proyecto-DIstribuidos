@@ -17,7 +17,6 @@ public class DAOArchivo extends DAO {
         ResultSet rs = ps.getGeneratedKeys();
         if(rs.next())
             archivo.set_id(rs.getInt(1));
-        c.close();
     }
 
     public void deleteArchivo(Archivo archivo) throws SQLException{
@@ -26,7 +25,6 @@ public class DAOArchivo extends DAO {
         PreparedStatement ps = c.prepareStatement(query);
         ps.setInt(1,archivo.get_id());
         ps.execute();
-        c.close();
     }
 
     public ArrayList<Archivo> getAll() throws SQLException {
@@ -43,7 +41,6 @@ public class DAOArchivo extends DAO {
             archivo = new Archivo(id,nombre);
             archivos.add(archivo);
         }
-        c.close();
         return archivos;
     }
 
@@ -61,7 +58,6 @@ public class DAOArchivo extends DAO {
             String nombre = rs.getString("arc_nombre");
             archivo = new Archivo(id,nombre);
         }
-        c.close();
         return archivo;
     }
 
@@ -77,7 +73,6 @@ public class DAOArchivo extends DAO {
             String nombre = rs.getString("arc_nombre");
             archivo = new Archivo(id2,nombre);
         }
-        c.close();
         return archivo;
     }
 
