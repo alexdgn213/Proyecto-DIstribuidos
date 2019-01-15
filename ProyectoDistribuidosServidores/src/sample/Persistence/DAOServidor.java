@@ -61,6 +61,13 @@ public class DAOServidor extends DAO {
             DAOVersion daoVersion = new DAOVersion();
             servidor = new Servidor(id,principal,tipo,null);
             servidor.set_listaVersiones(daoVersion.findByServidor(servidor));
+            String query2 = "select count(*) from public.ser_ver, public.version where ver_id = ser_ver_version and ser_ver_servidor = ?";
+            PreparedStatement ps2 = c.prepareStatement(query2);
+            ps2.setInt(1,id);
+            ResultSet rs2 = ps2.executeQuery();
+            if(rs2.next()){
+                servidor.set_cantidadDeArchivos(rs2.getInt(1));
+            }
         }
         return servidor;
     }

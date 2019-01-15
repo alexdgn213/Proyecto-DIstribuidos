@@ -28,6 +28,9 @@ public class Main {
         boolean continuar = true;
         if(primario.equals("s")){
             c.setServidor(1);
+            System.out.println("\nIngrese el numero de fallas a tolerar: ");
+            int fallas = input.nextInt();
+            c.fallas=fallas;
             while(continuar){
                 System.out.println("\n\n\nIngrese la funcion que desea realizar: ");
                 System.out.println("    1.- Commit ");
@@ -43,28 +46,40 @@ public class Main {
                     case 1 :
                         System.out.println("\n\nIngrese la ruta del archivo a subir");
                         String archivo = input.next();
-                        c.enviarSolicitudDeCopia(archivo);
+                        c.iniciarCommint(archivo);
+                        break;
+                    case 4 :
+                        for(Servidor s : c.servidoresConectados)
+                            System.out.println(s.toString());
+                        break;
 
                 }
             }
-
-
-
-
+            c.closeServidor();
         }
         else{
             System.out.println("Seleccione un servidor de la lista de servidores disponible para iniciar:\n");
             for(Servidor s : c.getServidoresDisponibles()){
-                DAOServidor dao = new DAOServidor();
-                try {
-                    System.out.println(dao.getById(s.get_id()));
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                System.out.println(s.get_id()+".- Servidor "+s.get_id()+" Tipo: "+s.getTipoAsString());
             }
             int tipo = input.nextInt();
             c.setServidor(tipo);
+            c.enviarConexionNueva();
+            while(continuar){
+                System.out.println("\n\n\nIngrese la funcion que desea realizar: ");
+                System.out.println("    1.- Ver archivos en el servidor");
+                System.out.println("    2.- Ver informacion del el servidor");
+                System.out.println("    0.- Salir");
+                int op = input.nextInt();
+                switch (op){
+                    case 0 :
+                        continuar = false;
+                        break;
+                }
+            }
+            c.closeServidor();
         }
+        System.exit(0);
 
     }
 }

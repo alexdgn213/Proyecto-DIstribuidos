@@ -1,9 +1,8 @@
 package sample.Communication;
 
+import sample.Controller;
 import sample.Domain.Archivo;
 import sample.Domain.Servidor;
-import sample.Domain.Version;
-import sample.Persistence.DAOArchivo;
 import sample.Persistence.DAOServidor;
 import sample.Persistence.DAOVersion;
 import sample.Util.FileManager;
@@ -22,9 +21,11 @@ public class CServidor {
     public final static int puerto = 8893;
     public final static String ipaddress = "235.1.1.1";
     private Servidor servidor;
+    private Controller controller;
 
-    public CServidor(Servidor servidor) throws IOException {
+    public CServidor(Servidor servidor, Controller controller) throws IOException {
         this.servidor = servidor;
+        this.controller = controller;
         //Para enviar
         _datagramSocket = new DatagramSocket();
         //Para recibir
@@ -34,6 +35,7 @@ public class CServidor {
         b_in = new ByteArrayInputStream(bo);
         datagramPacket = new DatagramPacket(bo, bo.length);
         new Thread(new Listener(this)).start();
+        controller.agregarServidor(servidor.get_id());
     }
 
     public void Enviar(CSolicitud cSolicitud) throws IOException {
@@ -50,40 +52,14 @@ public class CServidor {
     public void procesarSolicitud(CSolicitud cSolicitud){
         if(cSolicitud.getServidor()==0||cSolicitud.getServidor()==servidor.get_id()){
             if(cSolicitud.getTipo()==1){ //Quiero hacer un push
-                createCopy(cSolicitud.getArchivo());
+                controller.createCopy(cSolicitud.getArchivo(),cSolicitud.getNombre());
             }
-
+            else if(cSolicitud.getTipo()==0){
+                controller.agregarServidor(Integer.parseInt(cSolicitud.getNombre()));
+            }
         }
 
 
-    }
-
-    public void createCopy(File archivo){
-        try {
-            DAOServidor daoServidor = new DAOServidor();
-            String[] partes = archivo.getPath().split("/");
-            String nombre = partes[partes.length-1];
-            partes = nombre.split("\\.");
-            String ext = partes[1];
-            Archivo archivo1 = new Archivo(nombre);
-
-            //ArrayList<Servidor> servidors = new ArrayList<Servidor>();
-            //servidors.add(s);
-            //servidors.add(daoServidor.getById(25));
-            //servidors.add(daoServidor.getById(30));
-            //servidors.add(daoServidor.getById(32));
-            //servidors.add(daoServidor.getById(28));
-
-            //DAOArchivo daoArchivo = new DAOArchivo();
-            //daoArchivo.createArchivo(archivo1);
-            //System.out.println(archivo1.toString());
-
-            //DAOVersion daoVersion = new DAOVersion();
-            //Version v = daoVersion.createVersion(archivo1,servidors);
-            //System.out.println(v.toString());
-            FileManager.createCopy(archivo,servidor.getPath()+"hola"+"."+ext);
-        } catch (IOException e) {
-            e.printStackTrace();}
     }
 
     public class  Listener implements Runnable{

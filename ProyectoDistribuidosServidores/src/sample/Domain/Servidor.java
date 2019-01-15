@@ -8,6 +8,7 @@ public class Servidor {
     private boolean _principal;
     private int _tipo;
     private ArrayList<Version> _listaVersiones;
+    private int _cantidadDeArchivos;
 
     public Servidor(int _id, boolean _principal, int _tipo, ArrayList<Version> _listaVersiones) {
         this._id = _id;
@@ -55,15 +56,31 @@ public class Servidor {
         return "C:\\Users\\Public\\FSServidores\\Servidor"+_id+"\\";
     }
 
+    public int get_cantidadDeArchivos() {
+        return _cantidadDeArchivos;
+    }
+
+    public void set_cantidadDeArchivos(int _cantidadDeArchivos) {
+        this._cantidadDeArchivos = _cantidadDeArchivos;
+    }
+
     @Override
     public String toString() {
         String ret = "Servidor :"  + _id +
                 "\n    Principal:" + _principal +
+                "\n    Archivos:" + _cantidadDeArchivos +
                 "\n    Tipo:" + _tipo +
                 "\n    ListaVersiones:";
         for(Version v : _listaVersiones)
         ret = ret + "\n        " + v;
         ret = ret+ "\n\n";
         return ret;
+    }
+
+    public  String getTipoAsString(){
+        if(_tipo==0) return "pasivo";
+        else if(_tipo==1) return "activo";
+        return "NO existe";
+
     }
 }
