@@ -97,6 +97,19 @@ public class Controller {
         }
     }
 
+    public void ArrayList<Servidor> getServidoresConectadosDisponibles(){
+        try{
+            ArrayList<Servidor> servidoresConectadosDisponibles = new ArrayList<Servidor>();
+            for (Servidor s : servidoresConectados){
+                if(s.disponible = true)
+                    servidoresConectadosDisponibles.add(s);
+            }
+            return servidoresConectadosDisponibles;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     public void iniciarUpdate(String nombreArchivo,String nuevaRuta){
         try {

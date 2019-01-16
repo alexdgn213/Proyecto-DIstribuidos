@@ -31,7 +31,7 @@ public class DAOServidor extends DAO {
 
     public ArrayList<Servidor> getAllDisponibles() throws SQLException {
 
-        String query = "select * from public.Servidor where ser_disponible = true ";
+        String query = "select * from public.Servidor where ser_disponible = true order by id";
         Servidor servidor = null;
         ArrayList<Servidor> servidors = new ArrayList<Servidor>();
         Connection c = DAO.bdConnect();
