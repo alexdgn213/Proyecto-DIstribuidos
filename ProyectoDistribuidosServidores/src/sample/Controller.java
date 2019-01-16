@@ -35,14 +35,25 @@ public class Controller {
 
     public void setServidor(int servidor){
         try {
-            DAOServidor daoServidor = new DAOServidor();
             this.s = daoServidor.getById(servidor);
             daoServidor.setDisponible(false,s.get_id());
             cs = new CServidor(s, this);
-            System.out.println(s);
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void actualizarServidor(){
+        try {
+            Servidor nuevos= daoServidor.getById(s.get_id());
+            s.set_cantidadDeArchivos(nuevos.get_cantidadDeArchivos());
+            s.set_listaVersiones(nuevos.get_listaVersiones());
+
+        } catch (SQLException e) {
             e.printStackTrace();
         } catch (Exception e){
             e.printStackTrace();
@@ -78,50 +89,19 @@ public class Controller {
 
     public void iniciarCommint(String archivo){
         try {
-            String nombre = FileManager.getFileName(archivo);
-            Archivo archivo1 = new Archivo(nombre);
-            DAOArchivo daoArchivo = new DAOArchivo();
-            Archivo a = daoArchivo.findByName(nombre);
-            if (a==null) daoArchivo.createArchivo(archivo1);
-            else archivo1 = a;
-            Collections.sort(servidoresConectados, new Comparator<Servidor>() {
-                @Override
-                public int compare(Servidor servidor, Servidor t1) {
-                    return new Integer(servidor.get_cantidadDeArchivos()).compareTo(new Integer(t1.get_cantidadDeArchivos()));
-                }
-            });
-            int i = 1;
-            ArrayList<Servidor> servidoresAEnviar = new ArrayList<Servidor>();
-            boolean flag = true;
-            for (Servidor s: servidoresConectados){
-                if(flag == true)
-                servidoresAEnviar.add(s);
-                i = i+1;
-
-                if(i>3*fallas+1){
-                    flag = false;
-                    break;
-                }
-            }
-            DAOVersion daoVersion = new DAOVersion();
-            Version v = daoVersion.createVersion(archivo1,servidoresAEnviar);
-            for(Servidor s: servidoresAEnviar){
-                enviarSolicitudDeCommit(archivo,String.valueOf(v.get_id()),s.get_id());
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            int enc = (int)(Math.random() * servidoresConectados.size());
+            System.out.println(enc);
+            enviarInicioCommit(archivo,servidoresConectados.get(enc).get_id());
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
+
     public void iniciarUpdate(String nombreArchivo,String nuevaRuta){
         try {
             Archivo archivo = daoArchivo.findByName(nombreArchivo);
-            System.out.println(archivo.get_id()+archivo.get_nombre());
             Version version = daoVersion.findByArchivoReciente(archivo);
-            System.out.println(version.get_id());
             ArrayList<Servidor> servidoresConCopia = daoServidor.getByVersion(version);
             copiasArchivo = new ArrayList<File>();
             rutaUpdate = nuevaRuta;
@@ -151,14 +131,14 @@ public class Controller {
         }
     }
 
-    public void enviarSolicitudDeCommit(String archivo, String version, int servidor){
+    public void enviarSolicitudDeCommit(File archivo, String version, int servidor){
         try {
             CSolicitud cSolicitud = new CSolicitud();
             cSolicitud.setTipo(1);
             cSolicitud.setServidor(servidor);
             cSolicitud.setNombre(version);
             cSolicitud.setOrigen(s.get_id());
-            cSolicitud.setArchivo(new File(archivo));
+            cSolicitud.setArchivo(archivo);
             cs.Enviar(cSolicitud);
         } catch (IOException e) {
             e.printStackTrace();
@@ -187,8 +167,24 @@ public class Controller {
             CSolicitud cSolicitud = new CSolicitud();
             cSolicitud.setTipo(3);
             cSolicitud.setServidor(servidor);
+            cSolicitud.setOrigen(s.get_id());
             cSolicitud.setNombre(nombre);
             cSolicitud.setArchivo(new File(s.getPath()+nombre));
+            cs.Enviar(cSolicitud);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    };
+
+    public void enviarInicioCommit(String nombreArchivo, int servidor){
+        try {
+            CSolicitud cSolicitud = new CSolicitud();
+            cSolicitud.setTipo(4);
+            cSolicitud.setServidor(servidor);
+            cSolicitud.setNombre(nombreArchivo);
+            cSolicitud.setArchivo(new File(nombreArchivo));
             cs.Enviar(cSolicitud);
         } catch (IOException e) {
             e.printStackTrace();
@@ -235,6 +231,43 @@ public class Controller {
     public void agregarServidor(int servidor){
         try {
             servidoresConectados.add(daoServidor.getById(servidor));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void procesarInicioDeCommit(File archivo, String nombreArchivo){
+        try {
+            System.out.println("Me toco hacer el commit");
+            String nombre = FileManager.getFileName(nombreArchivo);
+            Archivo archivo1 = new Archivo(nombre);
+            DAOArchivo daoArchivo = new DAOArchivo();
+            Archivo a = daoArchivo.findByName(nombre);
+            if (a==null) daoArchivo.createArchivo(archivo1);
+            else archivo1 = a;
+            Collections.sort(servidoresConectados, new Comparator<Servidor>() {
+                @Override
+                public int compare(Servidor servidor, Servidor t1) {
+                    return new Integer(servidor.get_cantidadDeArchivos()).compareTo(new Integer(t1.get_cantidadDeArchivos()));
+                }
+            });
+            int i = 1;
+            ArrayList<Servidor> servidoresAEnviar = new ArrayList<Servidor>();
+            for (Servidor s: servidoresConectados){
+                servidoresAEnviar.add(s);
+                i = i+1;
+                if(i>3*fallas+1){
+                    break;
+                }
+            }
+            DAOVersion daoVersion = new DAOVersion();
+            Version v = daoVersion.createVersion(archivo1,servidoresAEnviar);
+            for(Servidor s: servidoresAEnviar){
+                enviarSolicitudDeCommit(archivo,String.valueOf(v.get_id()),s.get_id());
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (Exception e){

@@ -36,11 +36,10 @@ public class Main {
                 System.out.println("\n\n\nIngrese la funcion que desea realizar: ");
                 System.out.println("    1.- Commit ");
                 System.out.println("    2.- Update ");
-                System.out.println("    3.- Ver archivos en el servidor");
-                System.out.println("    4.- Ver informacion del el servidor");
+                System.out.println("    3.- Ver informacion del servidor");
                 System.out.println("    0.- Salir");
                 System.out.println("\n");
-                System.out.println("    Ingrese su eleccion: ");
+                System.out.println("Ingrese su eleccion: ");
                 int op = input.nextInt();
                 String archivo;
                 switch (op){
@@ -62,10 +61,10 @@ public class Main {
                         String ruta = input.next();
                         c.iniciarUpdate(archivo,ruta);
                         break;
-                    case 4 :
-                        for(Servidor s : c.servidoresConectados)
-                            System.out.println(s.toString());
-                        break;
+                    case 3 :
+                        System.out.println("\n");
+                        c.actualizarServidor();
+                        System.out.println(c.s.toString());
 
                 }
             }
@@ -81,16 +80,19 @@ public class Main {
             c.enviarConexionNueva();
             while(continuar){
                 System.out.println("\n\n\nIngrese la funcion que desea realizar: ");
-                System.out.println("    1.- Ver archivos en el servidor");
-                System.out.println("    2.- Ver informacion del el servidor");
+                System.out.println("    1.- Ver informacion del servidor");
                 System.out.println("    0.- Salir");
                 System.out.println("\n");
-                System.out.println("   Ingrese su eleccion: ");
+                System.out.println("Ingrese su eleccion: ");
                 int op = input.nextInt();
                 switch (op){
                     case 0 :
                         continuar = false;
                         break;
+                    case 1 :
+                        System.out.println("\n");
+                        c.actualizarServidor();
+                        System.out.println(c.s.toString());
                 }
             }
             c.closeServidor();

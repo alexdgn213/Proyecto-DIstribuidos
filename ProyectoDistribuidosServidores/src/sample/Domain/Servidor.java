@@ -67,10 +67,9 @@ public class Servidor {
     @Override
     public String toString() {
         String ret = "Servidor :"  + _id +
-                "\n    Principal:" + _principal +
+                "\n    Tipo:" + getTipoAsString() +
                 "\n    Archivos:" + _cantidadDeArchivos +
-                "\n    Tipo:" + _tipo +
-                "\n    ListaVersiones:";
+                "\n    Lista de versiones en el servidor:";
         for(Version v : _listaVersiones)
         ret = ret + "\n        " + v;
         ret = ret+ "\n\n";
@@ -78,8 +77,9 @@ public class Servidor {
     }
 
     public  String getTipoAsString(){
-        if(_tipo==0) return "pasivo";
-        else if(_tipo==1) return "activo";
+        if(_principal) return "Principal";
+        if(_tipo==0) return "Pasivo";
+        else if(_tipo==1) return "Activo";
         return "NO existe";
 
     }

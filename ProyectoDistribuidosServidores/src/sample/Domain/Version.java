@@ -47,10 +47,7 @@ public class Version {
 
     @Override
     public String toString() {
-        return "Version{" +
-                "_id=" + _id +
-                ", _archivo=" + _archivo +
-                ", _fecha=" + _fecha +
-                '}';
+        return _archivo.get_nombre() +
+                " Subida en " + _fecha;
     }
 }

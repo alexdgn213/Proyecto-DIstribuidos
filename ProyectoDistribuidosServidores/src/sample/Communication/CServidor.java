@@ -46,7 +46,6 @@ public class CServidor {
         String mensaje = "c";
         DatagramPacket datagramPacket = new DatagramPacket(b,b.length,InetAddress.getByName(ipaddress),puerto);
         _datagramSocket.send(datagramPacket);
-        System.out.println(mensaje.getBytes());
     }
 
     public void procesarSolicitud(CSolicitud cSolicitud){
@@ -62,6 +61,9 @@ public class CServidor {
             }
             else if(cSolicitud.getTipo()==3){ //Alguien devolvio su version del archivo
                 controller.procesarArchivoEnviado(cSolicitud.getArchivo());
+            }
+            else if(cSolicitud.getTipo()==4){ //El servidor principal asigno como responsable del commit
+                controller.procesarInicioDeCommit(cSolicitud.getArchivo(),cSolicitud.getNombre());
             }
         }
 
