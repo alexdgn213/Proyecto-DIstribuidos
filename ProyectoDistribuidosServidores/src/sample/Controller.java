@@ -47,14 +47,20 @@ public class Controller {
         }
     }
 
+    public void setServidorDesconocido(int servidor){
+        try {
+            this.s = new Servidor();
+            s.set_id(servidor);
+            cs = new CServidor(s,this);
+            pedirServidor();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void actualizarServidor(){
         try {
-            Servidor nuevos= daoServidor.getById(s.get_id());
-            s.set_cantidadDeArchivos(nuevos.get_cantidadDeArchivos());
-            s.set_listaVersiones(nuevos.get_listaVersiones());
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+            pedirServidor();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -89,27 +95,18 @@ public class Controller {
 
     public void iniciarCommint(String archivo){
         try {
-            int enc = (int)(Math.random() * servidoresConectados.size());
-            System.out.println(enc);
-            enviarInicioCommit(archivo,servidoresConectados.get(enc).get_id());
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void ArrayList<Servidor> getServidoresConectadosDisponibles(){
-        try{
-            ArrayList<Servidor> servidoresConectadosDisponibles = new ArrayList<Servidor>();
+            ArrayList<Servidor> servidoresActivos = new ArrayList<Servidor>();
             for (Servidor s : servidoresConectados){
-                if(s.disponible = true)
-                    servidoresConectadosDisponibles.add(s);
+                if(s.get_tipo()==1)
+                    servidoresActivos.add(s);
             }
-            return servidoresConectadosDisponibles;
+            int enc = (int)(Math.random() * servidoresActivos.size());
+            System.out.println(enc);
+            enviarInicioCommit(archivo,servidoresActivos.get(enc).get_id());
         } catch (Exception e){
             e.printStackTrace();
         }
     }
-
 
     public void iniciarUpdate(String nombreArchivo,String nuevaRuta){
         try {
@@ -183,6 +180,68 @@ public class Controller {
             cSolicitud.setOrigen(s.get_id());
             cSolicitud.setNombre(nombre);
             cSolicitud.setArchivo(new File(s.getPath()+nombre));
+            cs.Enviar(cSolicitud);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    };
+
+    public void pedirTodosLosServidore(){
+        try {
+            CSolicitud cSolicitud = new CSolicitud();
+            cSolicitud.setTipo(6);
+            cSolicitud.setServidor(1);
+            cSolicitud.setOrigen(s.get_id());
+            cs.Enviar(cSolicitud);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    };
+
+    public void enviarTodosLosServidore(){
+        try {
+            CSolicitud cSolicitud = new CSolicitud();
+            cSolicitud.setTipo(8);
+            cSolicitud.setServidor(0);
+            cSolicitud.setOrigen(s.get_id());
+            cSolicitud.setServidores(this.servidoresConectados);
+            cs.Enviar(cSolicitud);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    };
+
+    public void pedirServidor(){
+        try {
+            CSolicitud cSolicitud = new CSolicitud();
+            cSolicitud.setTipo(7);
+            cSolicitud.setServidor(1);
+            cSolicitud.setOrigen(s.get_id());
+            cs.Enviar(cSolicitud);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    };
+
+    public void enviarServidorSolicitado(int destino){
+        try {
+            CSolicitud cSolicitud = new CSolicitud();
+            cSolicitud.setTipo(9);
+            cSolicitud.setServidor(destino);
+            cSolicitud.setOrigen(s.get_id());
+            Servidor s = daoServidor.getById(destino);
+            daoServidor.setDisponible(false,s.get_id());
+            ArrayList<Servidor> envio = new ArrayList<Servidor>();
+            envio.add(s);
+            cSolicitud.setServidores(envio);
             cs.Enviar(cSolicitud);
         } catch (IOException e) {
             e.printStackTrace();
@@ -285,6 +344,21 @@ public class Controller {
             e.printStackTrace();
         } catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    public void agregarTodosLosServidores(ArrayList<Servidor> servidores){
+        this.servidoresConectados = servidores;
+    }
+
+    public void agregarServidor(ArrayList<Servidor> servidores){
+        this.s = servidores.get(0);
+    }
+
+    public void verTodosLosServidores(){
+        System.out.println("Servidores:");
+        for (Servidor s: servidoresConectados){
+            System.out.println(s);
         }
     }
 }

@@ -1,7 +1,10 @@
 package sample.Communication;
 
+import sample.Domain.Servidor;
+
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class CSolicitud implements Serializable {
 
@@ -10,6 +13,7 @@ public class CSolicitud implements Serializable {
     private int origen;
     private String nombre;
     private File archivo;
+    private ArrayList<Servidor> servidores;
 
     public CSolicitud(int tipo, int servidor, String nombre, File archivo) {
         this.tipo = tipo;
@@ -60,6 +64,14 @@ public class CSolicitud implements Serializable {
 
     public void setArchivo(File archivo) {
         this.archivo = archivo;
+    }
+
+    public ArrayList<Servidor> getServidores() {
+        return servidores;
+    }
+
+    public void setServidores(ArrayList<Servidor> servidores) {
+        this.servidores = servidores;
     }
 
     @Override

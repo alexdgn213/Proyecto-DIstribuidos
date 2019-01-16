@@ -1,6 +1,8 @@
 package sample.Domain;
 
-public class Archivo {
+import java.io.Serializable;
+
+public class Archivo implements Serializable {
 
     private int _id;
     private String _nombre;

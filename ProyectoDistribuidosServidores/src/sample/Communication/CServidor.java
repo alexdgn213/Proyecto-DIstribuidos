@@ -52,18 +52,24 @@ public class CServidor {
         if(cSolicitud.getServidor()==0||cSolicitud.getServidor()==servidor.get_id()){
             if(cSolicitud.getTipo()==0){ //Alguien nuevo se conecto
                 controller.agregarServidor(Integer.parseInt(cSolicitud.getNombre()));
-            }
-            else if(cSolicitud.getTipo()==1){ //Alguien solicito que almacenara un archivo
+            } else if(cSolicitud.getTipo()==1){ //Alguien solicito que almacenara un archivo
                 controller.createCopy(cSolicitud.getArchivo(),cSolicitud.getNombre());
-            }
-            else if(cSolicitud.getTipo()==2){ //Alguien solicito un archivo
+            } else if(cSolicitud.getTipo()==2){ //Alguien solicito un archivo
                 controller.enviarArchivoSolicitado(cSolicitud.getNombre(),cSolicitud.getOrigen());
-            }
-            else if(cSolicitud.getTipo()==3){ //Alguien devolvio su version del archivo
+            } else if(cSolicitud.getTipo()==3){ //Alguien devolvio su version del archivo
                 controller.procesarArchivoEnviado(cSolicitud.getArchivo());
-            }
-            else if(cSolicitud.getTipo()==4){ //El servidor principal asigno como responsable del commit
+            } else if(cSolicitud.getTipo()==4){ //El servidor principal asigno como responsable del commit
                 controller.procesarInicioDeCommit(cSolicitud.getArchivo(),cSolicitud.getNombre());
+            } else if(cSolicitud.getTipo()==5){ //El servidor principal asigno como responsable del update
+                controller.procesarInicioDeCommit(cSolicitud.getArchivo(),cSolicitud.getNombre());
+            } else if(cSolicitud.getTipo()==6){ //Solicitaron todos los servidores
+                controller.enviarTodosLosServidore();
+            } else if(cSolicitud.getTipo()==7){ //Solicitaron un servidor
+                controller.enviarServidorSolicitado(cSolicitud.getOrigen());
+            } else if(cSolicitud.getTipo()==8){ //Enviaron todos los servidores
+                controller.agregarTodosLosServidores(cSolicitud.getServidores());
+            } else if(cSolicitud.getTipo()==9){ //Enviaron mi servidor
+                controller.agregarServidor(cSolicitud.getServidores());
             }
         }
 

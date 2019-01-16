@@ -1,9 +1,10 @@
 package sample.Domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Servidor {
+public class Servidor implements Serializable {
     private int _id;
     private boolean _principal;
     private int _tipo;

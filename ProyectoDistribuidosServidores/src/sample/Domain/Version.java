@@ -1,8 +1,9 @@
 package sample.Domain;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Version {
+public class Version implements Serializable {
     private int _id;
     private Archivo _archivo;
     private Timestamp _fecha;
