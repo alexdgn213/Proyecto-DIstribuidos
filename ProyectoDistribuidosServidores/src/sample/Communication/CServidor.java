@@ -51,11 +51,17 @@ public class CServidor {
 
     public void procesarSolicitud(CSolicitud cSolicitud){
         if(cSolicitud.getServidor()==0||cSolicitud.getServidor()==servidor.get_id()){
-            if(cSolicitud.getTipo()==1){ //Quiero hacer un push
+            if(cSolicitud.getTipo()==0){ //Alguien nuevo se conecto
+                controller.agregarServidor(Integer.parseInt(cSolicitud.getNombre()));
+            }
+            else if(cSolicitud.getTipo()==1){ //Alguien solicito que almacenara un archivo
                 controller.createCopy(cSolicitud.getArchivo(),cSolicitud.getNombre());
             }
-            else if(cSolicitud.getTipo()==0){
-                controller.agregarServidor(Integer.parseInt(cSolicitud.getNombre()));
+            else if(cSolicitud.getTipo()==2){ //Alguien solicito un archivo
+                controller.enviarArchivoSolicitado(cSolicitud.getNombre(),cSolicitud.getOrigen());
+            }
+            else if(cSolicitud.getTipo()==3){ //Alguien devolvio su version del archivo
+                controller.procesarArchivoEnviado(cSolicitud.getArchivo());
             }
         }
 

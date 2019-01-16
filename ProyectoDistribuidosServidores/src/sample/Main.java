@@ -21,14 +21,15 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        System.out.println("Bienvenido a los servidores de FSGit");
-        System.out.println("Desea utilizar este servidor como servidor primario? (s/n)\n");
-        String primario = input.next().toLowerCase();
+        System.out.println("---------------------Bienvenido a los servidores de FSGit-------------------------");
+        System.out.println("Desea utilizar este servidor como servidor primario? (s/n):");
+        String primario = input.nextLine().toLowerCase();
         Controller c = new Controller();
         boolean continuar = true;
         if(primario.equals("s")){
             c.setServidor(1);
-            System.out.println("\nIngrese el numero de fallas a tolerar: ");
+            System.out.println("\n");
+            System.out.println("Ingrese el numero de fallas a tolerar: ");
             int fallas = input.nextInt();
             c.fallas=fallas;
             while(continuar){
@@ -38,15 +39,28 @@ public class Main {
                 System.out.println("    3.- Ver archivos en el servidor");
                 System.out.println("    4.- Ver informacion del el servidor");
                 System.out.println("    0.- Salir");
+                System.out.println("\n");
+                System.out.println("    Ingrese su eleccion: ");
                 int op = input.nextInt();
+                String archivo;
                 switch (op){
                     case 0 :
                         continuar = false;
                         break;
                     case 1 :
-                        System.out.println("\n\nIngrese la ruta del archivo a subir");
-                        String archivo = input.next();
+                        System.out.println("\n");
+                        System.out.println("Ingrese la ruta del archivo a subir: ");
+                        archivo = input.next();
                         c.iniciarCommint(archivo);
+                        break;
+                    case 2 :
+                        System.out.println("\n");
+                        System.out.println("Ingrese el nombre del archivo a buscar: ");
+                        archivo = input.next();
+                        System.out.println("\n");
+                        System.out.println("Ingrese de la ruta donde descargar: ");
+                        String ruta = input.next();
+                        c.iniciarUpdate(archivo,ruta);
                         break;
                     case 4 :
                         for(Servidor s : c.servidoresConectados)
@@ -59,9 +73,9 @@ public class Main {
         }
         else{
             System.out.println("Seleccione un servidor de la lista de servidores disponible para iniciar:\n");
-            for(Servidor s : c.getServidoresDisponibles()){
-                System.out.println(s.get_id()+".- Servidor "+s.get_id()+" Tipo: "+s.getTipoAsString());
-            }
+            c.getServidoresDisponibles();
+            System.out.println("\n");
+            System.out.println("Ingrese su eleccion: ");
             int tipo = input.nextInt();
             c.setServidor(tipo);
             c.enviarConexionNueva();
@@ -70,6 +84,8 @@ public class Main {
                 System.out.println("    1.- Ver archivos en el servidor");
                 System.out.println("    2.- Ver informacion del el servidor");
                 System.out.println("    0.- Salir");
+                System.out.println("\n");
+                System.out.println("   Ingrese su eleccion: ");
                 int op = input.nextInt();
                 switch (op){
                     case 0 :

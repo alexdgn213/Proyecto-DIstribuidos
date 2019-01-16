@@ -7,6 +7,7 @@ public class CSolicitud implements Serializable {
 
     private int tipo;
     private int servidor;
+    private int origen;
     private String nombre;
     private File archivo;
 
@@ -49,6 +50,14 @@ public class CSolicitud implements Serializable {
         return archivo;
     }
 
+    public int getOrigen() {
+        return origen;
+    }
+
+    public void setOrigen(int origen) {
+        this.origen = origen;
+    }
+
     public void setArchivo(File archivo) {
         this.archivo = archivo;
     }
@@ -58,7 +67,9 @@ public class CSolicitud implements Serializable {
         return "CSolicitud{" +
                 "tipo=" + tipo +
                 ", servidor=" + servidor +
+                ", origen=" + origen +
                 ", nombre='" + nombre + '\'' +
+                ", archivo=" + archivo +
                 '}';
     }
 }

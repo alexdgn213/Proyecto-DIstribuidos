@@ -83,6 +83,24 @@ public class DAOServidor extends DAO {
     }
 
 
+    public ArrayList<Servidor> getByVersion(Version v) throws SQLException {
+        String query = "Select * from servidor,Ser_Ver where ser_id = ser_ver_servidor and ser_ver_version = ?;";
+        Servidor servidor = null;
+        ArrayList<Servidor> servidors = new ArrayList<Servidor>();
+        Connection c = DAO.bdConnect();
+        PreparedStatement ps = c.prepareStatement(query);
+        ps.setInt(1,v.get_id());
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            int id = rs.getInt("ser_id");
+            int tipo = rs.getInt("ser_tipo");
+            Boolean principal = rs.getBoolean("ser_principal");
+            servidor = new Servidor(id,principal,tipo,null);
+            servidors.add(servidor);
+        }
+        return servidors;
+    }
+
 
     public Archivo findByName(String name) throws SQLException {
         String query = "select * from public.Archivo where arc_nombre = ? ";

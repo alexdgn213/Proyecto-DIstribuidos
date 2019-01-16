@@ -40,9 +40,10 @@ public class DAOVersion extends DAO {
         ps.setInt(1,archivo.get_id());
         ResultSet rs = ps.executeQuery();
         while(rs.next()){
-            int id = rs.getInt("ver_archivo");
+            int id = rs.getInt("ver_id");
             Timestamp fecha = rs.getTimestamp("ver_fecha");
             version = new Version(archivo,fecha);
+            version.set_id(id);
         }
         return version;
 

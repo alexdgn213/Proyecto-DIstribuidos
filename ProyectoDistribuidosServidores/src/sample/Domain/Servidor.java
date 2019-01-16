@@ -7,7 +7,7 @@ public class Servidor {
     private int _id;
     private boolean _principal;
     private int _tipo;
-    private ArrayList<Version> _listaVersiones;
+    private ArrayList<Version> _listaVersiones = new ArrayList<Version>();
     private int _cantidadDeArchivos;
 
     public Servidor(int _id, boolean _principal, int _tipo, ArrayList<Version> _listaVersiones) {
