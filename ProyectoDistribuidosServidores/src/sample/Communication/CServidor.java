@@ -58,10 +58,10 @@ public class CServidor {
                 controller.enviarArchivoSolicitado(cSolicitud.getNombre(),cSolicitud.getOrigen());
             } else if(cSolicitud.getTipo()==3){ //Alguien devolvio su version del archivo
                 controller.procesarArchivoEnviado(cSolicitud.getArchivo());
-            } else if(cSolicitud.getTipo()==4){ //El servidor principal asigno como responsable del commit
-                controller.procesarInicioDeCommit(cSolicitud.getArchivo(),cSolicitud.getNombre());
+            } else if(cSolicitud.getTipo()==4){ //El servidor principal asigno como responsable del commit el origen es el numero de fallas
+                controller.procesarInicioDeCommit(cSolicitud.getArchivo(),cSolicitud.getNombre(),cSolicitud.getOrigen());
             } else if(cSolicitud.getTipo()==5){ //El servidor principal asigno como responsable del update
-                controller.procesarInicioDeCommit(cSolicitud.getArchivo(),cSolicitud.getNombre());
+                //controller.procesarInicioDeCommit(cSolicitud.getArchivo(),cSolicitud.getNombre());
             } else if(cSolicitud.getTipo()==6){ //Solicitaron todos los servidores
                 controller.enviarTodosLosServidore();
             } else if(cSolicitud.getTipo()==7){ //Solicitaron un servidor

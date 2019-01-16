@@ -101,7 +101,6 @@ public class Controller {
                     servidoresActivos.add(s);
             }
             int enc = (int)(Math.random() * servidoresActivos.size());
-            System.out.println(enc);
             enviarInicioCommit(archivo,servidoresActivos.get(enc).get_id());
         } catch (Exception e){
             e.printStackTrace();
@@ -255,6 +254,7 @@ public class Controller {
             CSolicitud cSolicitud = new CSolicitud();
             cSolicitud.setTipo(4);
             cSolicitud.setServidor(servidor);
+            cSolicitud.setOrigen(fallas);
             cSolicitud.setNombre(nombreArchivo);
             cSolicitud.setArchivo(new File(nombreArchivo));
             cs.Enviar(cSolicitud);
@@ -310,9 +310,9 @@ public class Controller {
         }
     }
 
-    public void procesarInicioDeCommit(File archivo, String nombreArchivo){
+    public void procesarInicioDeCommit(File archivo, String nombreArchivo, int fallas){
         try {
-            System.out.println("Me toco hacer el commit");
+            this.fallas = fallas;
             String nombre = FileManager.getFileName(nombreArchivo);
             Archivo archivo1 = new Archivo(nombre);
             DAOArchivo daoArchivo = new DAOArchivo();
@@ -325,14 +325,13 @@ public class Controller {
                     return new Integer(servidor.get_cantidadDeArchivos()).compareTo(new Integer(t1.get_cantidadDeArchivos()));
                 }
             });
-            int i = 1;
+            int i = 0;
             ArrayList<Servidor> servidoresAEnviar = new ArrayList<Servidor>();
             for (Servidor s: servidoresConectados){
-                servidoresAEnviar.add(s);
-                i = i+1;
-                if(i>3*fallas+1){
-                    break;
+                if(i<3*fallas+1){
+                    servidoresAEnviar.add(s);
                 }
+                i = i+1;
             }
             DAOVersion daoVersion = new DAOVersion();
             Version v = daoVersion.createVersion(archivo1,servidoresAEnviar);
@@ -356,9 +355,13 @@ public class Controller {
     }
 
     public void verTodosLosServidores(){
-        System.out.println("Servidores:");
-        for (Servidor s: servidoresConectados){
-            System.out.println(s);
+        try {
+            System.out.println("Servidores:");
+            for (Servidor s: servidoresConectados){
+                System.out.println(daoServidor.getById(s.get_id()));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
