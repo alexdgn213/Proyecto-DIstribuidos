@@ -1,23 +1,8 @@
 package sample;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import sample.Communication.CCliente;
-import sample.Communication.CServidor;
-import sample.Communication.CSolicitud;
-import sample.Domain.Servidor;
-import sample.Persistence.DAOServidor;
-import sample.Util.FileManager;
-
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
-//www.javaspecialist.eu/archive/Issue028.html
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
